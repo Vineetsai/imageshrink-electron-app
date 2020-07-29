@@ -1,0 +1,19 @@
+{
+  "name": "imageshrink-electron",
+  "version": "1.0.0",
+  "description": "image optimizer",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "nodemon --exec electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^9.1.1",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "materialize-css": "^1.0.0-rc.2"
+  }
+}
