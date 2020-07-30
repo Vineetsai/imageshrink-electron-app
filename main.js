@@ -1,10 +1,18 @@
+const path = require("path");
+const os = require("os");
 const {
   app,
   BrowserWindow,
   Menu,
   globalShortcut,
   ipcMain,
+  shell,
 } = require("electron");
+const imagmin = require("imagemin");
+const imageminMozjpeg = require("imagemin-mozjpeg");
+const imageminPngquant = require("imagemin-pngquant");
+const slash = require("slash");
+const imagemin = require("imagemin");
 
 process.env.NODE_ENV = "dev";
 
@@ -26,8 +34,6 @@ function createMainWindow() {
     webPreferences: {
       nodeIntegration: true,
     },
-    allowRunningInsecureContent: true,
-    webSecurity: false,
   });
   mainWindow.loadURL(`file://${__dirname}/app/index.html`);
 }
@@ -108,8 +114,29 @@ const menu = [
   // },
 ];
 ipcMain.on("min-image", (e, msg) => {
+  msg.dest = path.join(os.homedir(), "imageshrink");
   console.log(msg);
+  shrinkImage(msg);
 });
+
+async function shrinkImage({ imgPath, quality, dest }) {
+  try {
+    const pngQuality = quality / 100;
+    const files = await imagemin([slash(imgPath)], {
+      destination: dest,
+      plugins: [
+        imageminMozjpeg({ quality }),
+        imageminPngquant({
+          quality: [pngQuality, pngQuality],
+        }),
+      ],
+    });
+    // shell.openItem(dest);
+    shell.openItem(dest);
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 app.on("window-all-closed", () => {
   if (process.platform === "darwin") {

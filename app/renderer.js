@@ -8,7 +8,7 @@ const img = document.getElementById("img");
 
 document.getElementById("output-path").innerText = path.join(
   os.homedir(),
-  "imgshrink"
+  "imageshrink"
 );
 
 // onsubmit
